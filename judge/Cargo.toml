@@ -13,3 +13,4 @@ env_logger = { version = "0.11.3", default-features = false }
 log = "0.4.22"
 
 judge-db = { path = "../judge-db" }
+thiserror = "1.0.65"

@@ -966,6 +966,7 @@ dependencies = [
  "env_logger",
  "judge-db",
  "log",
+ "thiserror",
 ]
 
 [[package]]
@@ -973,6 +974,7 @@ name = "judge-db"
 version = "0.1.0"
 dependencies = [
  "sqlx",
+ "thiserror",
 ]
 
 [[package]]

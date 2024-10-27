@@ -7,5 +7,6 @@ use actix_web::web::ServiceConfig;
 
 /// Configure the server (add the API and static endpoints)
 pub fn config(serv: &mut ServiceConfig) {
-    //serv.configure(api::config).service(Files::new("/", ))
+    serv.configure(api::config)
+        .service(Files::new("/", crate::build_config::STATIC_DIR));
 }
