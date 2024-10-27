@@ -18,7 +18,6 @@ pub struct Cmd {
 
 #[actix_web::main]
 async fn main() -> anyhow::Result<()> {
-
     // Load the .env vars
     let _ = dotenvy::dotenv()?;
 
