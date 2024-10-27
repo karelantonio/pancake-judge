@@ -1648,6 +1648,8 @@ dependencies = [
  "smallvec",
  "sqlformat",
  "thiserror",
+ "tokio",
+ "tokio-stream",
  "tracing",
  "url",
 ]
@@ -1687,6 +1689,7 @@ dependencies = [
  "sqlx-sqlite",
  "syn",
  "tempfile",
+ "tokio",
  "url",
 ]
 
@@ -1915,6 +1918,17 @@ dependencies = [
  "signal-hook-registry",
  "socket2",
  "windows-sys 0.52.0",
+]
+
+[[package]]
+name = "tokio-stream"
+version = "0.1.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "267ac89e0bec6e691e5813911606935d77c476ff49024f98abcea3e7b15e37af"
+dependencies = [
+ "futures-core",
+ "pin-project-lite",
+ "tokio",
 ]
 
 [[package]]

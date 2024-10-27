@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-sqlx = { version = "0.8.2", features = ["sqlite", "postgres"] }
+sqlx = { version = "0.8.2", features = ["sqlite", "postgres", "runtime-tokio"] }
 thiserror = "1.0.65"

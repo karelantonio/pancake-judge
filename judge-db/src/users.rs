@@ -1,15 +1,16 @@
 //! The users service, handles all the operations related to user, see [`UsersService`]
 
+use sqlx::pool::PoolConnection;
+use sqlx::{query, Any};
 use sqlx::{AnyConnection, Connection};
-use sqlx::query;
 
 /// A structure that maps a user from a database row
 /// A user must contain at least it's ID, Username, Name, Email, PasswordHash, PasswordSalt
 /// Also, there must be another table that contains at which groups this user belongs.
-/// 
+///
 /// When deleting a user, we MUST also delete its relations: Insitutions
 #[derive(Clone, Debug)]
-pub struct User{
+pub struct User {
     pub id: u64,
     pub username: String,
     pub name: String,
@@ -24,22 +25,15 @@ pub struct User{
 /// By wrapping this logic in a service instead of using ORMs we have more flexibility
 /// in the queries and less dependencies.
 pub struct UsersService {
-    conn: AnyConnection,
+    conn: PoolConnection<Any>,
 }
 
 impl UsersService {
-
     /// Default constructor, connects to the given address
-    pub async fn new(addr: &str) -> Result<Self, crate::ConnectError> {
-        Ok(Self {
-            conn: AnyConnection::connect(addr)
-                .await
-                .map_err(crate::ConnectError::Sqlx)?,
-        })
+    pub async fn new(conn: PoolConnection<Any>) -> Self {
+        Self { conn }
     }
 
     /// Query all users
-    pub async fn query_all_users(&self) {
-        
-    }
+    pub async fn query_all_users(&self) {}
 }
