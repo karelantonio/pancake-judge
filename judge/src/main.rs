@@ -58,6 +58,9 @@ async fn main() -> anyhow::Result<()> {
     // Setup the logger
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
+    // Parse the args
+    let args = Cmd::parse();
+
     // Connect to the DB
     info!("Connecting to the database");
     DatabaseService::setup_drivers();
@@ -65,8 +68,7 @@ async fn main() -> anyhow::Result<()> {
         .await
         .map_err(JudgeError::Db)?;
 
-    // Parse the args
-    match Cmd::parse() {
+    match args {
         Cmd::Run { unix, host } => {
             // Setup the server and delegate the setup
             let serv = HttpServer::new(|| App::new().configure(judge::config));
