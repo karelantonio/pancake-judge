@@ -4,7 +4,6 @@
 
 pub mod users;
 
-use sqlx::AnyPool;
 use thiserror::Error;
 use users::UsersService;
 
@@ -29,26 +28,40 @@ pub enum NewServiceError {
     Sqlx(#[source] sqlx::Error),
 }
 
+/// Errors that may happend querying
+#[derive(Error, Debug)]
+pub enum QueryError {
+    #[error("Unexpected error while executing SQL statement")]
+    Sqlx(#[source] sqlx::Error)
+}
+
+/// An alias to the backend database used
+#[cfg(feature = "use_postgres")]
+pub type Pool = sqlx::Pool<sqlx::Postgres>;
+#[cfg(not(feature = "use_postgres"))]
+pub type Pool = sqlx::Pool<sqlx::Sqlite>;
+#[cfg(feature = "use_postgres")]
+pub type PoolConnection = sqlx::pool::PoolConnection<Postgres>;
+#[cfg(not(feature = "use_postgres"))]
+pub type PoolConnection = sqlx::pool::PoolConnection<sqlx::Sqlite>;
+
 /// The database service in general
 /// Is the one we ask for the other services
 pub struct DatabaseService {
-    conn: AnyPool,
+    conn: Pool,
 }
 
 impl DatabaseService {
     /// Connect to the given database
     pub async fn new(url: &str) -> Result<Self, ConnectError> {
         Ok(Self {
-            conn: AnyPool::connect(url).await.map_err(ConnectError::Sqlx)?,
+            conn: Pool::connect(url).await.map_err(ConnectError::Sqlx)?,
         })
     }
 
     /// Get a new user service
-    pub async fn users(&self) -> Result<UsersService, NewServiceError> {
-        Ok(
-            users::UsersService::new(self.conn.acquire().await.map_err(NewServiceError::Sqlx)?)
-                .await,
-        )
+    pub fn users(&self) -> UsersService {
+        users::UsersService::new(self.conn.clone())
     }
 
     /// Runs the migrations
